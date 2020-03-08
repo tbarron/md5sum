@@ -1,2 +1,5 @@
 DODO
 *~
+.env
+md5sum
+ignore.go.mod
