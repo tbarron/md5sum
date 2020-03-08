@@ -35,6 +35,21 @@ func main() {
 	}
 
 // ----------------------------------------------------------------------------
+func handleArgs() {
+    for _, arg := range os.Args[1:] {
+        switch {
+        case arg == "-T": args.testing = true
+        case arg == "-t": args.terse = true
+        case arg == "-q": args.quiet = true
+        case arg[0] != '-':
+            if args.maxFnLen < len(arg) {
+                args.maxFnLen = len(arg)
+            }
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
 func md5sum(filepath string) string {
     f, err := os.Open(filepath)
     if err != nil {
