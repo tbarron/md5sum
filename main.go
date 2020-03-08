@@ -9,6 +9,15 @@ import (
     U "../swak"
 )
 
+type md5Args struct {
+    maxFnLen int
+    terse bool
+    quiet bool
+    testing bool
+}
+
+var args md5Args
+
 func main() {
 	for _, filepath := range os.Args[1:] {
 		f, err := os.Open(filepath)
