@@ -26,17 +26,25 @@ func TestHandleArgs(t *testing.T) {
     cases := []struct {
         inp string
         exp md5Args
+        expout string
     }{
-        { "foo", md5Args{ 0, false, false, true } },
-        { "foo -t", md5Args{0, true, false, true } },
-        { "foo -q", md5Args{0, false, true, true } },
-        { "foo three four fifteenish -q -t", md5Args{10, true, true, true } },
-        { "foo one two three four fifteen", md5Args{7, false, false, true } },
+        { "foo", md5Args{ 0, false, false, true }, "" },
+        { "foo -t", md5Args{0, true, false, true }, "" },
+        { "foo -q", md5Args{0, false, true, true }, "" },
+        { "foo three fifteenish -t", md5Args{10, true, false, true }, "" },
+        { "foo one three four fifteen", md5Args{7, false, false, true }, "" },
+        { "foo one four -t -q", md5Args{4, true, true, true},
+            "-q and -t are not compatible\n"},
+        { "foo one four -q -t", md5Args{4, true, true, true},
+            "-t and -q are not compatible\n" },
     }
 
     for _, c := range cases {
         os.Args = strings.Split(c.inp, " ")
+        obuf := &strings.Builder{}
+        setOutput(obuf)
         handleArgs()
+        setOutput(os.Stdout)
         if args.maxFnLen != c.exp.maxFnLen {
             t.Errorf("Expected %d in maxFnLen, got %d",
                 c.exp.maxFnLen, args.maxFnLen)
@@ -46,6 +54,9 @@ func TestHandleArgs(t *testing.T) {
         }
         if args.quiet != c.exp.quiet {
             t.Errorf("Expected %v in quiet, got %v", c.exp.quiet, args.quiet)
+        }
+        if obuf.String() != c.expout {
+            t.Errorf("Expected output %q, got %q", c.expout, obuf.String())
         }
         args.maxFnLen = 0
         args.terse = false
