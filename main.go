@@ -110,4 +110,3 @@ func fatalf(sfmt string, items ...interface{}) {
 		os.Exit(0)
 	}
 }
-

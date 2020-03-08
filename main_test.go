@@ -100,16 +100,16 @@ func TestQuiet(t *testing.T) {
     if err.Error() != "exit status 1" {
         t.Errorf("Expected error 'exit status 1', got '%s'", err.Error())
     }
-    if result != "\n" {
-        t.Errorf("Expected output \"\\n\", got %q", result)
+    if result != "" {
+        t.Errorf("Expected output \"\", got %q", result)
     }
 
     result, err = externalTest(t, "md5sum -q main.go main.go")
     if err != nil {
         t.Errorf("Expected error nil, got '%s'", err.Error())
     }
-    if result != "\n" {
-        t.Errorf("Expected output \"\\n\", got %q", result)
+    if result != "" {
+        t.Errorf("Expected output \"\", got %q", result)
     }
 }
 
