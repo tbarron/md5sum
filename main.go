@@ -4,8 +4,9 @@ import (
     "crypto/md5"
     "fmt"
     "io"
-    "log"
     "os"
+
+    U "../swak"
 )
 
 func main() {
