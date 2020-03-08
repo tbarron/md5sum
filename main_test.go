@@ -1,11 +1,17 @@
 package main
 
 import (
+    "io"
     "os"
     "os/exec"
     "strings"
     "testing"
 )
+
+// ----------------------------------------------------------------------------
+func setOutput(op io.Writer) {
+    output = op
+}
 
 // ----------------------------------------------------------------------------
 func TestExtAlignment(t *testing.T) {
@@ -54,8 +60,11 @@ func TestHandleArgs(t *testing.T) {
 
 // ----------------------------------------------------------------------------
 func TestMain(t *testing.T) {
+    obuf := &strings.Builder{}
+    setOutput(obuf)
     os.Args = []string{"foo", "-q", "-T", "main.go", "main_test.go"}
     main()
+    setOutput(os.Stdout)
 }
 
 // ----------------------------------------------------------------------------

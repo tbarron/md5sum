@@ -18,6 +18,8 @@ type md5Args struct {
 
 var args md5Args
 
+var output io.Writer = os.Stdout
+
 // ----------------------------------------------------------------------------
 func main() {
     var sumList []string
@@ -29,7 +31,8 @@ func main() {
         sum := md5sum(filepath)
         sumList = append(sumList, sum)
         filepath += ":"
-        fmt.Printf("%*s %s\n", -1 * (args.maxFnLen + 1), filepath, sum)
+        fmt.Fprintf(output, "%*s %s\n",
+            -1 * (args.maxFnLen + 1), filepath, sum)
     }
     xval := 0
     prev := sumList[0]
