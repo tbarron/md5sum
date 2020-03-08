@@ -18,21 +18,30 @@ type md5Args struct {
 
 var args md5Args
 
+// ----------------------------------------------------------------------------
 func main() {
-	for _, filepath := range os.Args[1:] {
-		f, err := os.Open(filepath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
-
-		h := md5.New()
-		if _, err := io.Copy(h, f); err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Printf("%s: %x\n", filepath, h.Sum(nil))
-	}
+    var sumList []string
+    handleArgs()
+    for _, filepath := range os.Args[1:] {
+        if filepath[0] == '-' {
+            continue
+        }
+        sum := md5sum(filepath)
+        sumList = append(sumList, sum)
+        filepath += ":"
+        fmt.Printf("%*s %s\n", -1 * (args.maxFnLen + 1), filepath, sum)
+    }
+    xval := 0
+    prev := sumList[0]
+    for _, sum := range sumList {
+        if prev != sum {
+            xval = 1
+        }
+    }
+    if ! args.testing {
+        os.Exit(xval)
+    }
+}
 
 // ----------------------------------------------------------------------------
 func handleArgs() {
