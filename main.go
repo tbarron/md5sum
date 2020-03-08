@@ -5,8 +5,6 @@ import (
     "fmt"
     "io"
     "os"
-
-    U "../swak"
 )
 
 type md5Args struct {
@@ -65,13 +63,24 @@ func handleArgs() {
 func md5sum(filepath string) string {
     f, err := os.Open(filepath)
     if err != nil {
-        U.Fatalf("%v", err)
+        fatalf("%v", err)
     }
     defer f.Close()
 
     h := md5.New()
     if _, err := io.Copy(h, f); err != nil {
-        U.Fatalf("%v", err)
+        fatalf("%v", err)
     }
     return fmt.Sprintf("%x", h.Sum(nil))
 }
+
+// ----------------------------------------------------------------------------
+// Put out a message and exit
+func fatalf(sfmt string, items ...interface{}) {
+	sfmt += "\n"
+	fmt.Fprintf(output, sfmt, items...)
+	if output == os.Stdout {
+		os.Exit(0)
+	}
+}
+
