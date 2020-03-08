@@ -33,4 +33,18 @@ func main() {
 
 		fmt.Printf("%s: %x\n", filepath, h.Sum(nil))
 	}
+
+// ----------------------------------------------------------------------------
+func md5sum(filepath string) string {
+    f, err := os.Open(filepath)
+    if err != nil {
+        U.Fatalf("%v", err)
+    }
+    defer f.Close()
+
+    h := md5.New()
+    if _, err := io.Copy(h, f); err != nil {
+        U.Fatalf("%v", err)
+    }
+    return fmt.Sprintf("%x", h.Sum(nil))
 }
