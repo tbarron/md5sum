@@ -1,6 +1,6 @@
 # md5sum
 
-This program displays md5 sums for files specified on the command line
+This program displays md5 sums for files specified on the command line.
 
 ## Example (default output)
 
