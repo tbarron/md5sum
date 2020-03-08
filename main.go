@@ -14,6 +14,11 @@ type md5Args struct {
     testing bool
 }
 
+type report struct {
+    filepath string
+    sum      string
+}
+
 var args md5Args
 
 var output io.Writer = os.Stdout
@@ -21,6 +26,9 @@ var output io.Writer = os.Stdout
 // ----------------------------------------------------------------------------
 func main() {
     var sumList []string
+    var result report
+    var resList []report
+
     handleArgs()
     for _, filepath := range os.Args[1:] {
         if filepath[0] == '-' {
@@ -29,14 +37,25 @@ func main() {
         sum := md5sum(filepath)
         sumList = append(sumList, sum)
         filepath += ":"
-        fmt.Fprintf(output, "%*s %s\n",
-            -1 * (args.maxFnLen + 1), filepath, sum)
+        result.filepath = fmt.Sprintf("%*s",
+            -1 * (args.maxFnLen + 1), filepath)
+        result.sum = sum
+        resList = append(resList, result)
     }
     xval := 0
-    prev := sumList[0]
-    for _, sum := range sumList {
-        if prev != sum {
+    for i, res := range resList {
+        if !args.terse && !args.quiet {
+            fmt.Fprintf(output, "%s %s\n", res.filepath, res.sum)
+        }
+        if (0 < i) && (res.sum != resList[i-1].sum) {
             xval = 1
+        }
+    }
+    if args.terse {
+        if xval == 0 {
+            fmt.Fprintf(output, "ok\n")
+        } else {
+            fmt.Fprintf(output, "mismatch\n")
         }
     }
     if ! args.testing {
