@@ -68,8 +68,16 @@ func handleArgs() {
     for _, arg := range os.Args[1:] {
         switch {
         case arg == "-T": args.testing = true
-        case arg == "-t": args.terse = true
-        case arg == "-q": args.quiet = true
+        case arg == "-t":
+            if args.quiet {
+                fmt.Fprintf(output, "-t and -q are not compatible\n")
+            }
+            args.terse = true
+        case arg == "-q":
+            if args.terse {
+                fmt.Fprintf(output, "-q and -t are not compatible\n")
+            }
+            args.quiet = true
         case arg[0] != '-':
             if args.maxFnLen < len(arg) {
                 args.maxFnLen = len(arg)
