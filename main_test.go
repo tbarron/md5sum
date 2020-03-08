@@ -103,6 +103,25 @@ func TestQuiet(t *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
+func TestTerse(t *testing.T) {
+    result, err := externalTest(t, "md5sum -t main.go main_test.go")
+    if err.Error() != "exit status 1" {
+        t.Errorf("Expected error 'exit status 1', got '%s'", err.Error())
+    }
+    if result != "mismatch\n" {
+        t.Errorf("Expected output \"mismatched\\n\", got %q", result)
+    }
+
+    result, err = externalTest(t, "md5sum -t main.go main.go")
+    if err != nil {
+        t.Errorf("Expected error nil, got '%s'", err.Error())
+    }
+    if result != "ok\n" {
+        t.Errorf("Expected output \"ok\\n\", got %q", result)
+    }
+}
+
+// ----------------------------------------------------------------------------
 func externalTest(t *testing.T, cmd string) (string, error) {
     words := strings.Fields(cmd)
     xbl := exec.Command(words[0], words[1:]...)
