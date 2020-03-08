@@ -9,11 +9,6 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-func setOutput(op io.Writer) {
-    output = op
-}
-
-// ----------------------------------------------------------------------------
 func TestExtAlignment(t *testing.T) {
     frog, err := externalTest(t, "md5sum main.go main_test.go")
     x := strings.Split(frog, "\n")
@@ -94,4 +89,9 @@ func externalTest(t *testing.T, cmd string) (string, error) {
     xbl := exec.Command(words[0], words[1:]...)
     op, err := xbl.Output()
     return string(op), err
+}
+
+// ----------------------------------------------------------------------------
+func setOutput(op io.Writer) {
+    output = op
 }
